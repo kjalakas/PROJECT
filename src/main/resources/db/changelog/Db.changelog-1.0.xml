@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+    <changeSet author="authorName" id="changelog-1.0">
+        <createTable tableName="event">
+            <column name="event_id" type="bigint" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true" unique="true"/>
+            </column>
+            <column name="event_date" type="date">
+                <constraints nullable="false" primaryKey="false" unique="false"/>
+            </column>
+            <column name="location" type="text">
+                <constraints nullable="true" primaryKey="false" unique="false"/>
+            </column>
+            <column name="nr_of_participants" type="text">
+                <constraints nullable="false" primaryKey="false" unique="false"/>
+            </column>
+            <column name="event_language" type="text">
+                <constraints nullable="false" primaryKey="false" unique="false"/>
+            </column>
+        </createTable>
+        <createTable tableName="account">
+            <column name="customer_id" type="integer">
+                <constraints nullable="false" primaryKey="true" unique="true" foreignKeyName = "fk_account_customer" references = "customer(id)"/>
+            </column>
+            <column name="account_nr" type="text">
+                <constraints nullable="false" primaryKey="false" unique="true"/>
+            </column>
+            <column name="amount" type="integer">
+                <constraints nullable="false" primaryKey="false" unique="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
