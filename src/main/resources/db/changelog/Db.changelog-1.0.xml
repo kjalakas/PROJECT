@@ -22,6 +22,14 @@
                 <constraints nullable="true" primaryKey="false" unique="false"/>
             </column>
         </createTable>
+        <createTable tableName="wishlist">
+            <column name="wishlist_id" type="integer" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true" unique="true"/>
+            </column>
+            <column name="wishlist_description" type="text">
+                <constraints nullable="true" primaryKey="false" unique="false"/>
+            </column>
+        </createTable>
         <createTable tableName="participant">
             <column name="participant_id" type="integer" autoIncrement="true">
                 <constraints nullable="false" primaryKey="true" unique="true"/>
@@ -41,14 +49,6 @@
                              references="wishlist(wishlist_id)"/>
             </column>
             <column name="p_language" type="text">
-                <constraints nullable="true" primaryKey="false" unique="false"/>
-            </column>
-        </createTable>
-        <createTable tableName="wishlist">
-            <column name="wishlist_id" type="integer" autoIncrement="true">
-                <constraints nullable="false" primaryKey="true" unique="true"/>
-            </column>
-            <column name="wishlist_description" type="text">
                 <constraints nullable="true" primaryKey="false" unique="false"/>
             </column>
         </createTable>
