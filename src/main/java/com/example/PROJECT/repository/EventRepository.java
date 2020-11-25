@@ -22,14 +22,12 @@ public class EventRepository {
 
     public Integer createEvent(LocalDate eventDate,
                             String location,
-                            Integer nrOfParticipants,
                             String eventLanguage) {
-        String sql = "INSERT INTO event (event_date, location, nr_of_participants, event_language)" +
-                "VALUES (:eventDate, :location, :nrOfParticipants, :eventLanguage)";
+        String sql = "INSERT INTO event (event_date, location, event_language)" +
+                "VALUES (:eventDate, :location, :eventLanguage)";
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("eventDate", eventDate);
         paramMap.put("location", location);
-        paramMap.put("nrOfParticipants", nrOfParticipants);
         paramMap.put("eventLanguage", eventLanguage);
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(sql, new MapSqlParameterSource(paramMap), keyHolder);

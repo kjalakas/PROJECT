@@ -13,7 +13,6 @@ public class EventService {
     //siia proge funtsioonid kogu äriloogikast
 
     public int createEvent(Event event) {
-        return repository.createEvent(event.getEventDate(), event.getLocation(),
-                event.getNrOfParticipants(), event.getEventLanguage());
+        return repository.createEvent(event.getEventDate(), event.getLocation(), event.getEventLanguage());
     }
 }

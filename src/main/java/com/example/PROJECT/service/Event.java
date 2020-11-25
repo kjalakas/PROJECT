@@ -6,7 +6,6 @@ public class Event {
     private Integer eventId;
     private LocalDate eventDate;
     private String location;
-    private Integer nrOfParticipants;
     private String eventLanguage;
 
     public Event() {
@@ -34,14 +33,6 @@ public class Event {
 
     public void setLocation(String location) {
         this.location = location;
-    }
-
-    public Integer getNrOfParticipants() {
-        return nrOfParticipants;
-    }
-
-    public void setNrOfParticipants(Integer nrOfParticipants) {
-        this.nrOfParticipants = nrOfParticipants;
     }
 
     public String getEventLanguage() {

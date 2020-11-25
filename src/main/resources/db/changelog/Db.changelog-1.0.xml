@@ -67,4 +67,7 @@
             </column>
         </createTable>
     </changeSet>
+    <changeSet id="changelog-1.1" author="authorName1">
+        <dropColumn tableName="event" columnName="nr_of_participants"/>
+    </changeSet>
 </databaseChangeLog>
