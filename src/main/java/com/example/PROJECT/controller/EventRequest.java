@@ -8,11 +8,11 @@ public class EventRequest {
     // kuupäev
     private LocalDate eventDate;
     // asukoht
-    private String location;
+    private String eventLocation;
     // keel
-    private String language;
+    private String eventLanguage;
 
-    private List<ParticipantRequest> participantRequests = new ArrayList<>();
+    private List<ParticipantRequest> participants = new ArrayList<>();
 
     public LocalDate getEventDate() {
         return eventDate;
@@ -22,28 +22,28 @@ public class EventRequest {
         this.eventDate = eventDate;
     }
 
-    public String getLocation() {
-        return location;
+    public String getEventLocation() {
+        return eventLocation;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setEventLocation(String eventLocation) {
+        this.eventLocation = eventLocation;
     }
 
-    public String getLanguage() {
-        return language;
+    public String getEventLanguage() {
+        return eventLanguage;
     }
 
-    public void setLanguage(String language) {
-        this.language = language;
+    public void setEventLanguage(String eventLanguage) {
+        this.eventLanguage = eventLanguage;
     }
 
-    public List<ParticipantRequest> getParticipantRequests() {
-        return participantRequests;
+    public List<ParticipantRequest> getParticipants() {
+        return participants;
     }
 
-    public void setParticipantRequests(List<ParticipantRequest> participantRequests) {
-        this.participantRequests = participantRequests;
+    public void setParticipants(List<ParticipantRequest> participants) {
+        this.participants = participants;
     }
 }
 

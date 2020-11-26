@@ -11,7 +11,7 @@ public class Participant {
     public Participant() {
     }
 
-    public Integer getParticipantId() {
+    public Integer getPrticipantId() {
         return participantId;
     }
 

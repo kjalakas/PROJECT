@@ -1,5 +1,6 @@
 package com.example.PROJECT.controller;
 
+import com.example.PROJECT.Participant;
 import com.example.PROJECT.service.Event;
 import com.example.PROJECT.service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ public class GiftDrawManager {
 
     @CrossOrigin
     @PostMapping("createEvent")
-    public String createEvent(@RequestBody Event event) {
-        return "Event created! Your Event ID is " + eventService.createEvent(event);
+    public String createEvent(@RequestBody EventRequest eventRequest) {
+        return "Event created! Your Event ID is " + eventService.createEvent(eventRequest);
     }
 }

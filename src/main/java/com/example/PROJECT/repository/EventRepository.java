@@ -21,17 +21,34 @@ public class EventRepository {
     //siia proge funktsioonid mis suhtlevad DB-ga
 
     public Integer createEvent(LocalDate eventDate,
-                            String location,
+                            String eventLocation,
                             String eventLanguage) {
         String sql = "INSERT INTO event (event_date, location, event_language)" +
-                "VALUES (:eventDate, :location, :eventLanguage)";
+                "VALUES (:eventDate, :eventLocation, :eventLanguage)";
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("eventDate", eventDate);
-        paramMap.put("location", location);
+        paramMap.put("eventLocation", eventLocation);
         paramMap.put("eventLanguage", eventLanguage);
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(sql, new MapSqlParameterSource(paramMap), keyHolder);
         Integer result = (Integer) keyHolder.getKeys().get("event_id");
         return result;
     }
+
+    public void createParticipant(String name,
+                                     String email,
+                                     String participantLanguage,
+                                     Integer eventId) {
+        String sql = "INSERT INTO participant (event_id, name, email, p_language)" +
+                "VALUES (:eventId,:name, :email, :participantLanguage)";
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("eventId", eventId);
+        paramMap.put("name", name);
+        paramMap.put("email", email);
+        paramMap.put("participantLanguage", participantLanguage);
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(sql, new MapSqlParameterSource(paramMap), keyHolder);
+        Integer result = (Integer) keyHolder.getKeys().get("participant_id");
+    }
+
 }
