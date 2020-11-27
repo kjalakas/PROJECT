@@ -51,6 +51,9 @@
             <column name="p_language" type="text">
                 <constraints nullable="true" primaryKey="false" unique="false"/>
             </column>
+            <column name="gift_to_id" type="integer">
+                <constraints nullable="true" primaryKey="false" unique="false"/>
+            </column>
         </createTable>
         <createTable tableName="language">
             <column name="language_id" type="integer" autoIncrement="true">
