@@ -53,21 +53,6 @@ public class EventRepository {
         Integer result = (Integer) keyHolder.getKeys().get("participant_id");
     }
 
-    public Integer getNumber(Integer eventId) {
-        String sql = "SELECT count(participant_id) FROM participant WHERE event_id=:eventId";
-        Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("eventId", eventId);
-        Integer dbNumber = jdbcTemplate.queryForObject(sql, paramMap, Integer.class);
-        return dbNumber;
-    }
-
-    public Integer getMinId(Integer eventId) {
-        String sql = "SELECT Min(participant_id) FROM participant WHERE event_id=:eventId";
-        Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("eventId", eventId);
-        Integer minNumber = jdbcTemplate.queryForObject(sql, paramMap, Integer.class);
-        return minNumber;
-    }
 
     public void updateGiftToId(Integer participantId,
                                Integer giftToId) {
@@ -79,17 +64,31 @@ public class EventRepository {
         jdbcTemplate.update(sql2, paramMap);
     }
 
-    public Integer getResult(Integer eventId) {
-        String sql = "SELECT CASE WHEN EXISTS(SELECT gift_to_id FROM participant WHERE gift_to_id is NULL and event_id = :eventId) THEN 1 ELSE 0 END";
-        Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("eventId", eventId);
-        return jdbcTemplate.queryForObject(sql, paramMap, Integer.class);
-    }
 
     public List<ParticipantEntity> getParticipantsByEventId(int eventId) {
         String sql = "SELECT * FROM participant WHERE event_id = :eventId";
         Map<String, Integer> paramMap = new HashMap<>();
         paramMap.put("eventId", eventId);
         return jdbcTemplate.query(sql, paramMap, new ParticipantEntityRowMapper());
+    }
+
+    public String getEmail(int eventId,
+                           Integer participantId) {
+        String sql = "SELECT email FROM participant WHERE event_id=:eventId AND participant_id=:participantId";
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("participantId", participantId);
+        paramMap.put("eventId", eventId);
+        String email = jdbcTemplate.queryForObject(sql, paramMap, String.class);
+        return email;
+    }
+
+    public String getName(int eventId,
+                          Integer participantId) {
+        String sql = "SELECT name FROM participant WHERE event_id=:eventId AND participant_id=:participantId";
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("participantId", participantId);
+        paramMap.put("eventId", eventId);
+        String name = jdbcTemplate.queryForObject(sql, paramMap, String.class);
+        return name;
     }
 }
