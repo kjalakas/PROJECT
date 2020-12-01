@@ -8,8 +8,6 @@ public class Event {
     private String location;
     private String eventLanguage;
 
-    public Event() {
-    }
 
     public Integer getEventId() {
         return eventId;

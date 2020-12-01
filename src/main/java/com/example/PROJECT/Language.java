@@ -6,8 +6,6 @@ public class Language {
     private String welcomeText;
     private String personalMessageText;
 
-    public Language() {
-    }
 
     public Integer getLanguageId() {
         return languageId;

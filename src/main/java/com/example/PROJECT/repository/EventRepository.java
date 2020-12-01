@@ -7,8 +7,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
@@ -33,8 +31,7 @@ public class EventRepository {
         paramMap.put("eventLanguage", eventLanguage);
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(sql, new MapSqlParameterSource(paramMap), keyHolder);
-        Integer result = (Integer) keyHolder.getKeys().get("event_id");
-        return result;
+        return (Integer) keyHolder.getKeys().get("event_id");
     }
 
     public void createParticipant(String name,
@@ -50,7 +47,7 @@ public class EventRepository {
         paramMap.put("participantLanguage", participantLanguage);
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(sql, new MapSqlParameterSource(paramMap), keyHolder);
-        Integer result = (Integer) keyHolder.getKeys().get("participant_id");
+        keyHolder.getKeys().get("participant_id");
     }
 
 
@@ -78,8 +75,7 @@ public class EventRepository {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("participantId", participantId);
         paramMap.put("eventId", eventId);
-        String email = jdbcTemplate.queryForObject(sql, paramMap, String.class);
-        return email;
+        return jdbcTemplate.queryForObject(sql, paramMap, String.class);
     }
 
     public String getName(int eventId,
@@ -88,7 +84,6 @@ public class EventRepository {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("participantId", participantId);
         paramMap.put("eventId", eventId);
-        String name = jdbcTemplate.queryForObject(sql, paramMap, String.class);
-        return name;
+        return jdbcTemplate.queryForObject(sql, paramMap, String.class);
     }
 }

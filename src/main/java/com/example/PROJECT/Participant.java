@@ -17,8 +17,6 @@ public class Participant {
         this.giftToId = giftToId;
     }
 
-    public Participant() {
-    }
 
     public Integer getParticipantId() {
         return participantId;

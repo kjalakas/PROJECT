@@ -1,7 +1,6 @@
 package com.example.PROJECT.controller;
 
-import com.example.PROJECT.Participant;
-import com.example.PROJECT.service.Event;
+
 import com.example.PROJECT.service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;

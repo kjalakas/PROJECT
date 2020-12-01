@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.mail.*;
-import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.transaction.Transactional;
@@ -25,22 +24,14 @@ public class EventService {
     @Transactional
     public int createEvent(EventRequest eventRequest) throws MessagingException {
         int eventId = repository.createEvent(eventRequest.getEventDate(), eventRequest.getEventLocation(), eventRequest.getEventLanguage());
-        // TEEB SAMA ASJA for (int i = 1; i<=eventRequest.getParticipantRequests().size() ; i++) {
-        // ParticipantRequest participant = eventRequest.getParticipantRequests().get(i);
-        //throw new RuntimeException("String");
+
         for (ParticipantRequest participant : eventRequest.getParticipants()) {
             repository.createParticipant(participant.getName(), participant.getEmail(), participant.getParticipantLanguage(),
                     eventId);
         }
         List<ParticipantEntity> eventParticipants = repository.getParticipantsByEventId(eventId);
-        randomFunction(eventParticipants, eventId);
-/*
-        for (int i = 0; i < eventParticipants.size(); i++) {
-            System.out.println("You with email " + eventParticipants.get(i).getEmail() + ". Your participantId is " +
-                    eventParticipants.get(i).getParticipantId() + ". Your giftee is " + repository.getName(eventId,eventParticipants.get(i).getGiftToId())  + ".");
-        }
+        randomFunction(eventParticipants);
 
- */
         for (int i = 0; i < eventParticipants.size(); i++) {
             sendMessage(eventParticipants.get(i).getEmail(),
                     "Sündmus toimub: " + eventRequest.getEventDate() + ", kohas: " + eventRequest.getEventLocation(),
@@ -49,8 +40,7 @@ public class EventService {
         return eventId;
     }
 
-    public void randomFunction(List<ParticipantEntity> participantEntities,
-                               int eventId) {
+    public void randomFunction(List<ParticipantEntity> participantEntities) {
         List<Integer> randomArrayList = new ArrayList<>();
         // PEAB VÕTMA tabelist participant ühe konkreetse evendi ja
         // salvestama tulpa gift_to_id igale participant_id unikaalse random-i id,
@@ -69,7 +59,7 @@ public class EventService {
         for (int i = 0; i < participantEntities.size(); i++) {
 
             // Juhul kui esimene element randomArrayListis ei võrdu, siis teeb
-            if (participantEntities.get(i).getParticipantId() != randomArrayList.get(0)) {
+            if (participantEntities.get(i).getParticipantId().equals(randomArrayList.get(0))!=true) {
                 // uuendab randomArrayListis kohal 0 oleva elemendiga gift_to_id participandi tabelis
                 repository.updateGiftToId(participantEntities.get(i).getParticipantId(), randomArrayList.get(0));
                 // uuendab ka participantEntities klassis GiftToId
@@ -99,6 +89,7 @@ public class EventService {
     prop.put("mail.smtp.port", "587");
     Session session = Session.getInstance(prop,
             new javax.mail.Authenticator() {
+        @Override
                 protected PasswordAuthentication getPasswordAuthentication() {
                     return new PasswordAuthentication("kingiloos2020", "polaroid999");
                 }
