@@ -7,11 +7,12 @@ import com.example.PROJECT.repository.ParticipantEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.mail.*;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Service
 public class EventService {
@@ -22,7 +23,7 @@ public class EventService {
     //siia proge funtsioonid kogu äriloogikast
 
     @Transactional
-    public int createEvent(EventRequest eventRequest) {
+    public int createEvent(EventRequest eventRequest) throws MessagingException {
         int eventId = repository.createEvent(eventRequest.getEventDate(), eventRequest.getEventLocation(), eventRequest.getEventLanguage());
         // TEEB SAMA ASJA for (int i = 1; i<=eventRequest.getParticipantRequests().size() ; i++) {
         // ParticipantRequest participant = eventRequest.getParticipantRequests().get(i);
@@ -33,10 +34,17 @@ public class EventService {
         }
         List<ParticipantEntity> eventParticipants = repository.getParticipantsByEventId(eventId);
         randomFunction(eventParticipants, eventId);
-
+/*
         for (int i = 0; i < eventParticipants.size(); i++) {
             System.out.println("You with email " + eventParticipants.get(i).getEmail() + ". Your participantId is " +
-                    eventParticipants.get(i).getParticipantId() + ". Your giftee is " + repository.getName(eventId,eventParticipants.get(i).getGiftToId()));
+                    eventParticipants.get(i).getParticipantId() + ". Your giftee is " + repository.getName(eventId,eventParticipants.get(i).getGiftToId())  + ".");
+        }
+
+ */
+        for (int i = 0; i < eventParticipants.size(); i++) {
+            sendMessage(eventParticipants.get(i).getEmail(),
+                    "Sündmus toimub: " + eventRequest.getEventDate() + ", kohas: " + eventRequest.getEventLocation(),
+                    "Sina teed kingi osalejale: " + repository.getName(eventId,eventParticipants.get(i).getGiftToId()));
         }
         return eventId;
     }
@@ -79,6 +87,29 @@ public class EventService {
                 repository.updateGiftToId(participantEntities.get(i - 1).getParticipantId(), randomArrayList.get(0));
             }
         }
+    }
+
+    public void sendMessage (String email,
+                             String EmailSubject,
+                             String EmailText) throws MessagingException {
+    Properties prop = new Properties();
+    prop.put("mail.smtp.auth", true);
+    prop.put("mail.smtp.starttls.enable", "true");
+    prop.put("mail.smtp.host", "smtp.gmail.com");
+    prop.put("mail.smtp.port", "587");
+    Session session = Session.getInstance(prop,
+            new javax.mail.Authenticator() {
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication("kingiloos2020", "polaroid999");
+                }
+            });
+    Message message = new MimeMessage(session);
+    message.setFrom(new InternetAddress("kingiloos2020@gmail.com"));
+    message.setRecipients(
+    Message.RecipientType.TO, InternetAddress.parse(email));
+    message.setSubject(EmailSubject);
+    message.setText(EmailText);
+    Transport.send(message);
     }
 }
 

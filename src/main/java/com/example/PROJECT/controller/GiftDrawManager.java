@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.mail.MessagingException;
+
 @RestController
 public class GiftDrawManager {
 
@@ -19,7 +21,7 @@ public class GiftDrawManager {
 
     @CrossOrigin
     @PostMapping("createEvent")
-    public String createEvent(@RequestBody EventRequest eventRequest) {
+    public String createEvent(@RequestBody EventRequest eventRequest) throws MessagingException {
         return "Event created! Your Event ID is " + eventService.createEvent(eventRequest);
     }
 }
