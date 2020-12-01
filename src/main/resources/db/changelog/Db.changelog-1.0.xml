@@ -69,6 +69,22 @@
                 <constraints nullable="false" primaryKey="false" unique="false"/>
             </column>
         </createTable>
+        <createTable tableName="email">
+            <column name="email_id" type="integer" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true" unique="true"/>
+            </column>
+            <column name="participant_id" type="integer">
+                <constraints nullable="false" primaryKey="false" unique="false" foreignKeyName="fk_email_participant"
+                             references="participant(participant_id)"/>
+            </column>
+            <column name="event_id" type="integer">
+                <constraints nullable="false" primaryKey="false" unique="false" foreignKeyName="fk_email_event"
+                             references="event(event_id)"/>
+            </column>
+            <column name="email_sent" type="timestamp">
+                <constraints nullable="true" primaryKey="false" unique="false"/>
+            </column>
+        </createTable>
     </changeSet>
     <changeSet id="changelog-1.1" author="authorName1">
         <dropColumn tableName="event" columnName="nr_of_participants"/>

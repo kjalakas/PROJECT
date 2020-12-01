@@ -7,7 +7,9 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +36,7 @@ public class EventRepository {
         return (Integer) keyHolder.getKeys().get("event_id");
     }
 
-    public void createParticipant(String name,
+    public Integer createParticipant(String name,
                                      String email,
                                      String participantLanguage,
                                      Integer eventId) {
@@ -47,8 +49,22 @@ public class EventRepository {
         paramMap.put("participantLanguage", participantLanguage);
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(sql, new MapSqlParameterSource(paramMap), keyHolder);
-        keyHolder.getKeys().get("participant_id");
+        return (Integer) keyHolder.getKeys().get("participant_id");
     }
+
+    public void createEmail(      Integer participantId,
+                                  Integer eventId
+                                  ) {
+        String sql = "INSERT INTO email (participant_id, event_id)" +
+                "VALUES (:participantId,:eventId)";
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("participantId", participantId);
+        paramMap.put("eventId", eventId);
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(sql, new MapSqlParameterSource(paramMap), keyHolder);
+        keyHolder.getKeys().get("email_id");
+    }
+
 
 
     public void updateGiftToId(Integer participantId,
@@ -69,14 +85,40 @@ public class EventRepository {
         return jdbcTemplate.query(sql, paramMap, new ParticipantEntityRowMapper());
     }
 
-    public String getEmail(int eventId,
-                           Integer participantId) {
-        String sql = "SELECT email FROM participant WHERE event_id=:eventId AND participant_id=:participantId";
+    public List<EmailData> getEmailData() {
+        String sql = "SELECT * FROM email\n" +
+                "    JOIN event e on email.event_id = e.event_id\n" +
+                "    JOIN participant p on email.participant_id = p.participant_id\n" +
+                "where email_sent is NULL; ";
+        Map<String, Integer> paramMap = new HashMap<>();
+        return jdbcTemplate.query(sql, paramMap, new EmailDataRowMapper());
+    }
+
+    public void updateEmailSent(Integer participantId,
+                               Integer eventId) {
+        String sql2 = "UPDATE email SET email_sent=:emailSent " +
+                " WHERE participant_id=:participantId and event_id=:eventId";
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("participantId", participantId);
         paramMap.put("eventId", eventId);
+        paramMap.put("emailSent",  new Timestamp((new Date()).getTime()));
+        jdbcTemplate.update(sql2, paramMap);
+    }
+
+    public String getWelcomeText(String participantLanguage) {
+        String sql = "SELECT welcome_text FROM language WHERE language_description=:participantLanguage";
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("participantLanguage", participantLanguage);
         return jdbcTemplate.queryForObject(sql, paramMap, String.class);
     }
+
+    public String getPersonalText(String participantLanguage) {
+        String sql = "SELECT personal_message_text FROM language WHERE language_description=:participantLanguage";
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("participantLanguage", participantLanguage);
+        return jdbcTemplate.queryForObject(sql, paramMap, String.class);
+    }
+
 
     public String getName(int eventId,
                           Integer participantId) {

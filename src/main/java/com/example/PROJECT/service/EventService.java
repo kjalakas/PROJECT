@@ -5,6 +5,8 @@ import com.example.PROJECT.controller.ParticipantRequest;
 import com.example.PROJECT.repository.EventRepository;
 import com.example.PROJECT.repository.ParticipantEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.mail.*;
@@ -26,19 +28,15 @@ public class EventService {
         int eventId = repository.createEvent(eventRequest.getEventDate(), eventRequest.getEventLocation(), eventRequest.getEventLanguage());
 
         for (ParticipantRequest participant : eventRequest.getParticipants()) {
-            repository.createParticipant(participant.getName(), participant.getEmail(), participant.getParticipantLanguage(),
+            int participantId = repository.createParticipant(participant.getName(), participant.getEmail(), participant.getParticipantLanguage(),
                     eventId);
+            repository.createEmail(participantId, eventId);
         }
         List<ParticipantEntity> eventParticipants = repository.getParticipantsByEventId(eventId);
         randomFunction(eventParticipants);
-
-        for (int i = 0; i < eventParticipants.size(); i++) {
-            sendMessage(eventParticipants.get(i).getEmail(),
-                    "Sündmus toimub: " + eventRequest.getEventDate() + ", kohas: " + eventRequest.getEventLocation(),
-                    "Sina teed kingi osalejale: " + repository.getName(eventId,eventParticipants.get(i).getGiftToId()));
-        }
         return eventId;
     }
+
 
     public void randomFunction(List<ParticipantEntity> participantEntities) {
         List<Integer> randomArrayList = new ArrayList<>();
@@ -59,7 +57,7 @@ public class EventService {
         for (int i = 0; i < participantEntities.size(); i++) {
 
             // Juhul kui esimene element randomArrayListis ei võrdu, siis teeb
-            if (participantEntities.get(i).getParticipantId().equals(randomArrayList.get(0))!=true) {
+            if (participantEntities.get(i).getParticipantId().equals(randomArrayList.get(0)) != true) {
                 // uuendab randomArrayListis kohal 0 oleva elemendiga gift_to_id participandi tabelis
                 repository.updateGiftToId(participantEntities.get(i).getParticipantId(), randomArrayList.get(0));
                 // uuendab ka participantEntities klassis GiftToId
@@ -79,28 +77,5 @@ public class EventService {
         }
     }
 
-    public void sendMessage (String email,
-                             String EmailSubject,
-                             String EmailText) throws MessagingException {
-    Properties prop = new Properties();
-    prop.put("mail.smtp.auth", true);
-    prop.put("mail.smtp.starttls.enable", "true");
-    prop.put("mail.smtp.host", "smtp.gmail.com");
-    prop.put("mail.smtp.port", "587");
-    Session session = Session.getInstance(prop,
-            new javax.mail.Authenticator() {
-        @Override
-                protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication("kingiloos2020", "polaroid999");
-                }
-            });
-    Message message = new MimeMessage(session);
-    message.setFrom(new InternetAddress("kingiloos2020@gmail.com"));
-    message.setRecipients(
-    Message.RecipientType.TO, InternetAddress.parse(email));
-    message.setSubject(EmailSubject);
-    message.setText(EmailText);
-    Transport.send(message);
-    }
 }
 
