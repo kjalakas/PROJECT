@@ -26,13 +26,12 @@ public class ScheduledTasks extends EventService {
 
         for (int i = 0; i < emailData.size(); i++) {
             String emailSubject = repository.getWelcomeText(emailData.get(i).getParticipantLanguage());
-            emailSubject = emailSubject.replace("${event_date}", (CharSequence) emailData.get(i).getEventDate());
+            emailSubject = emailSubject.replace("${event_date}", String.valueOf(emailData.get(i).getEventDate()));
             emailSubject = emailSubject.replace("${location}", emailData.get(i).getLocation());
             String emailText = repository.getPersonalText(emailData.get(i).getParticipantLanguage());
-            emailText = emailText.replace("${participant}", repository.getName(emailData.get(i).getEventId(),emailData.get(i).getGiftToId()));
-            sendMessage(emailData.get(i).getEmail(),
-                       repository.getWelcomeText(emailData.get(i).getParticipantLanguage()) + emailData.get(i).getEventDate() + ", " + emailData.get(i).getLocation(),
-                    emailText );
+            emailText = emailText.replace("${giftee}", repository.getName(emailData.get(i).getEventId(),emailData.get(i).getGiftToId()));
+            emailText = emailText.replace("${participant}", repository.getName(emailData.get(i).getEventId(),emailData.get(i).getParticipantId()));
+            sendMessage(emailData.get(i).getEmail(), emailSubject, emailText );
                     repository.updateEmailSent(emailData.get(i).getParticipantId(),emailData.get(i).getEventId());
         }
     }
@@ -58,7 +57,7 @@ public class ScheduledTasks extends EventService {
         message.setRecipients(
                 Message.RecipientType.TO, InternetAddress.parse(email));
         message.setSubject(EmailSubject);
-        message.setText(EmailText);
+        message.setContent(EmailText,"text/html;charset=UTF-8");
         Transport.send(message);
             System.out.println("Sent message successfully....");
         } catch (MessagingException e) {

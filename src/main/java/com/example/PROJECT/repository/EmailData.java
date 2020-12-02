@@ -1,20 +1,11 @@
 package com.example.PROJECT.repository;
 
-import java.sql.Timestamp;
-import java.time.LocalDate;
+import java.util.Date;
 
 public class EmailData {
     private Integer eventId;
-    private Timestamp eventDate;
+    private Date eventDate;
     private String location;
-    private String eventLanguage;
-    private Integer participantId;
-    private String name;
-    private String email;
-    private Integer wishlistId;
-    private String participantLanguage;
-    private Integer giftToId;
-    private Integer emailId;
 
     public Integer getEventId() {
         return eventId;
@@ -25,11 +16,11 @@ public class EmailData {
         return this;
     }
 
-    public Timestamp getEventDate() {
+    public Date getEventDate() {
         return eventDate;
     }
 
-    public EmailData setEventDate(Timestamp eventDate) {
+    public EmailData setEventDate(Date eventDate) {
         this.eventDate = eventDate;
         return this;
     }
@@ -114,4 +105,14 @@ public class EmailData {
         this.emailId = emailId;
         return this;
     }
+
+    private String eventLanguage;
+    private Integer participantId;
+    private String name;
+    private String email;
+    private Integer wishlistId;
+    private String participantLanguage;
+    private Integer giftToId;
+    private Integer emailId;
+
 }

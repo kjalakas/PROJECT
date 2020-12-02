@@ -4,7 +4,6 @@ import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 
 public class EmailDataRowMapper implements RowMapper<EmailData> {
 
@@ -12,7 +11,7 @@ public class EmailDataRowMapper implements RowMapper<EmailData> {
     public EmailData mapRow(ResultSet resultSet, int i) throws SQLException {
         return new EmailData()
                 .setEventId(resultSet.getInt("event_id"))
-                .setEventDate(resultSet.getTimestamp("event_date"))
+                .setEventDate(resultSet.getDate("event_date"))
                 .setLocation(resultSet.getString("location"))
                 .setEventLanguage(resultSet.getString("event_language"))
                 .setParticipantId(resultSet.getInt("participant_id"))
