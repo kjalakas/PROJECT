@@ -9,10 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Repository
 public class EventRepository {
@@ -40,13 +37,15 @@ public class EventRepository {
                                      String email,
                                      String participantLanguage,
                                      Integer eventId) {
-        String sql = "INSERT INTO participant (event_id, name, email, p_language)" +
-                "VALUES (:eventId,:name, :email, :participantLanguage)";
+        String sql = "INSERT INTO participant (event_id, name, email, p_language, uuid)" +
+                "VALUES (:eventId,:name, :email, :participantLanguage, :uuid)";
         Map<String, Object> paramMap = new HashMap<>();
+        UUID uuid = UUID.randomUUID();
         paramMap.put("eventId", eventId);
         paramMap.put("name", name);
         paramMap.put("email", email);
         paramMap.put("participantLanguage", participantLanguage);
+        paramMap.put("uuid", uuid);
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(sql, new MapSqlParameterSource(paramMap), keyHolder);
         return (Integer) keyHolder.getKeys().get("participant_id");
@@ -109,6 +108,15 @@ public class EventRepository {
         String sql = "SELECT welcome_text FROM language WHERE language_description=:participantLanguage";
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("participantLanguage", participantLanguage);
+        return jdbcTemplate.queryForObject(sql, paramMap, String.class);
+    }
+
+    public String getUuid(Integer participantId,
+                          Integer eventId) {
+        String sql = "SELECT uuid FROM participant WHERE participant_id=:participantId and event_id=:eventId";
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("participantId", participantId);
+        paramMap.put("eventId", eventId);
         return jdbcTemplate.queryForObject(sql, paramMap, String.class);
     }
 

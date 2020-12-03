@@ -12,6 +12,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.List;
 import java.util.Properties;
+import java.util.UUID;
 
 @Component
 public class ScheduledTasks extends EventService {
@@ -25,6 +26,7 @@ public class ScheduledTasks extends EventService {
         List<EmailData> emailData = repository.getEmailData();
 
         for (int i = 0; i < emailData.size(); i++) {
+
             String emailSubject = repository.getWelcomeText(emailData.get(i).getParticipantLanguage());
             emailSubject = emailSubject.replace("${event_date}", String.valueOf(emailData.get(i).getEventDate()));
             emailSubject = emailSubject.replace("${location}", emailData.get(i).getLocation());
@@ -34,6 +36,13 @@ public class ScheduledTasks extends EventService {
             sendMessage(emailData.get(i).getEmail(), emailSubject, emailText );
                     repository.updateEmailSent(emailData.get(i).getParticipantId(),emailData.get(i).getEventId());
         }
+    }
+
+    public void sendGiftWish() {
+        UUID uuid = UUID.randomUUID();
+        System.out.println(uuid);
+        String url = "localhost:8080/wishlist/" + uuid;
+
     }
 
     public void sendMessage(String email,
