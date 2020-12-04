@@ -4,6 +4,7 @@ import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 
 public class EmailDataRowMapper implements RowMapper<EmailData> {
 
@@ -17,9 +18,11 @@ public class EmailDataRowMapper implements RowMapper<EmailData> {
                 .setParticipantId(resultSet.getInt("participant_id"))
                 .setName(resultSet.getString("name"))
                 .setEmail(resultSet.getString("email"))
-                .setWishlistId(resultSet.getInt("wishlist_id"))
                 .setParticipantLanguage(resultSet.getString("p_language"))
                 .setGiftToId(resultSet.getInt("gift_to_id"))
-                .setEmailId(resultSet.getInt("email_id"));
+                .setEmailId(resultSet.getInt("email_id"))
+                .setWishlist(resultSet.getString("wishlist"))
+                .setWishlistSentEmail(resultSet.getString("wishlist_sent_email"));
+
     }
 }

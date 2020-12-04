@@ -3,10 +3,7 @@ package com.example.PROJECT.controller;
 
 import com.example.PROJECT.service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
 
@@ -23,4 +20,12 @@ public class GiftDrawManager {
     public String createEvent(@RequestBody EventRequest eventRequest) throws MessagingException {
         return "Event created! Your Event ID is " + eventService.createEvent(eventRequest);
     }
+
+    @CrossOrigin
+    @PostMapping("wishlist")
+    public void sendWish(@RequestBody UuidRequest uuidRequest) {
+        eventService.sendWish(uuidRequest);
+    }
+
+
 }

@@ -14,7 +14,6 @@ public class ParticipantEntityRowMapper implements RowMapper<ParticipantEntity> 
                 .setEventId(resultSet.getInt("event_id"))
                 .setName(resultSet.getString("name"))
                 .setEmail(resultSet.getString("email"))
-                .setWishlistId(resultSet.getInt("wishlist_id"))
                 .setParticipantLanguage(resultSet.getString("p_language"))
                 .setGiftToId(resultSet.getInt("gift_to_id"));
     }

@@ -44,9 +44,11 @@
             <column name="email" type="text">
                 <constraints nullable="false" primaryKey="false" unique="false"/>
             </column>
-            <column name="wishlist_id" type="integer">
-                <constraints nullable="true" primaryKey="false" unique="false" foreignKeyName="fk_participant_wishlist"
-                             references="wishlist(wishlist_id)"/>
+            <column name="wishlist" type="text">
+                <constraints nullable="true" primaryKey="false" unique="false"/>
+            </column>
+            <column name="wishlist_sent_email" type="timestamp">
+                <constraints nullable="true" primaryKey="false" unique="false"/>
             </column>
             <column name="p_language" type="text">
                 <constraints nullable="true" primaryKey="false" unique="false"/>
@@ -69,6 +71,12 @@
                 <constraints nullable="false" primaryKey="false" unique="false"/>
             </column>
             <column name="personal_message_text" type="text">
+                <constraints nullable="false" primaryKey="false" unique="false"/>
+            </column>
+            <column name="wishlist_welcome_text" type="text">
+                <constraints nullable="false" primaryKey="false" unique="false"/>
+            </column>
+            <column name="wishlist_personal_message_text" type="text">
                 <constraints nullable="false" primaryKey="false" unique="false"/>
             </column>
         </createTable>

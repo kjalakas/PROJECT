@@ -2,7 +2,6 @@ package com.example.PROJECT.service;
 
 import com.example.PROJECT.repository.EmailData;
 import com.example.PROJECT.repository.EventRepository;
-import com.example.PROJECT.repository.ParticipantEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -12,7 +11,6 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.List;
 import java.util.Properties;
-import java.util.UUID;
 
 @Component
 public class ScheduledTasks extends EventService {
@@ -23,7 +21,8 @@ public class ScheduledTasks extends EventService {
     // 1000ms=1s e 60 000 = 1 min
     @Scheduled(fixedRate=60000)
     public void sendMessages() throws MessagingException {
-        List<EmailData> emailData = repository.getEmailData();
+        List<EmailData> emailData = repository.getEmailData1();
+        List<EmailData> emailData2 = repository.getEmailData2();
 
         for (int i = 0; i < emailData.size(); i++) {
 
@@ -31,19 +30,30 @@ public class ScheduledTasks extends EventService {
             emailSubject = emailSubject.replace("${event_date}", String.valueOf(emailData.get(i).getEventDate()));
             emailSubject = emailSubject.replace("${location}", emailData.get(i).getLocation());
             String emailText = repository.getPersonalText(emailData.get(i).getParticipantLanguage());
-            emailText = emailText.replace("${giftee}", repository.getName(emailData.get(i).getEventId(),emailData.get(i).getGiftToId()));
-            emailText = emailText.replace("${participant}", repository.getName(emailData.get(i).getEventId(),emailData.get(i).getParticipantId()));
-            sendMessage(emailData.get(i).getEmail(), emailSubject, emailText );
-                    repository.updateEmailSent(emailData.get(i).getParticipantId(),emailData.get(i).getEventId());
+            emailText = emailText.replace("${giftee}", repository.getName(emailData.get(i).getEventId(), emailData.get(i).getGiftToId()));
+            emailText = emailText.replace("${participant}", repository.getName(emailData.get(i).getEventId(), emailData.get(i).getParticipantId()));
+            emailText = emailText.replace("${uuid}", repository.getUuid(emailData.get(i).getParticipantId(), emailData.get(i).getEventId()));
+            sendMessage(emailData.get(i).getEmail(), emailSubject, emailText);
+            repository.updateEmailSent(emailData.get(i).getParticipantId(), emailData.get(i).getEventId());
+        }
+
+        for (int i = 0; i < emailData2.size(); i++) {
+
+            if (repository.wishEntered(emailData2.get(i).getGiftToId(), emailData2.get(i).getEventId()) != 0) {
+
+                String emailSubject2 = repository.getWishlistWelcomeText(emailData2.get(i).getParticipantLanguage());
+                emailSubject2 = emailSubject2.replace("${giftee}", repository.getName(emailData2.get(i).getEventId(), emailData2.get(i).getGiftToId()));
+                String emailText2 = repository.getWishlistPersonalText(emailData2.get(i).getParticipantLanguage());
+                emailText2 = emailText2.replace("${giftee}", repository.getName(emailData2.get(i).getEventId(), emailData2.get(i).getGiftToId()));
+                emailText2 = emailText2.replace("${participant}", repository.getName(emailData2.get(i).getEventId(), emailData2.get(i).getParticipantId()));
+                emailText2 = emailText2.replace("${kingisoovid}", repository.getWish(emailData2.get(i).getGiftToId(), emailData2.get(i).getEventId()));
+                sendMessage(emailData2.get(i).getEmail(), emailSubject2, emailText2);
+                repository.updateWishlistEmailSent(emailData2.get(i).getParticipantId(), emailData2.get(i).getEventId());
+
+            }
         }
     }
 
-    public void sendGiftWish() {
-        UUID uuid = UUID.randomUUID();
-        System.out.println(uuid);
-        String url = "localhost:8080/wishlist/" + uuid;
-
-    }
 
     public void sendMessage(String email,
                             String EmailSubject,

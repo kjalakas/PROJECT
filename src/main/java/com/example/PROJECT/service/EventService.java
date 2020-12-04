@@ -2,6 +2,7 @@ package com.example.PROJECT.service;
 
 import com.example.PROJECT.controller.EventRequest;
 import com.example.PROJECT.controller.ParticipantRequest;
+import com.example.PROJECT.controller.UuidRequest;
 import com.example.PROJECT.repository.EventRepository;
 import com.example.PROJECT.repository.ParticipantEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,11 @@ public class EventService {
         List<ParticipantEntity> eventParticipants = repository.getParticipantsByEventId(eventId);
         randomFunction(eventParticipants);
         return eventId;
+    }
+
+
+    public void sendWish(UuidRequest uuidRequest) {
+        repository.sendWish(uuidRequest.getUuid(),uuidRequest.getWishlist());
     }
 
 

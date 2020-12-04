@@ -6,6 +6,15 @@ public class EmailData {
     private Integer eventId;
     private Date eventDate;
     private String location;
+    private String eventLanguage;
+    private Integer participantId;
+    private String name;
+    private String email;
+    private String wishlist;
+    private String wishlistSentEmail;
+    private String participantLanguage;
+    private Integer giftToId;
+    private Integer emailId;
 
     public Integer getEventId() {
         return eventId;
@@ -70,12 +79,21 @@ public class EmailData {
         return this;
     }
 
-    public Integer getWishlistId() {
-        return wishlistId;
+    public String getWishlist() {
+        return wishlist;
     }
 
-    public EmailData setWishlistId(Integer wishlistId) {
-        this.wishlistId = wishlistId;
+    public EmailData setWishlist(String wishlist) {
+        this.wishlist = wishlist;
+        return this;
+    }
+
+    public String getWishlistSentEmail() {
+        return wishlistSentEmail;
+    }
+
+    public EmailData setWishlistSentEmail(String wishlistSentEmail) {
+        this.wishlistSentEmail = wishlistSentEmail;
         return this;
     }
 
@@ -105,14 +123,4 @@ public class EmailData {
         this.emailId = emailId;
         return this;
     }
-
-    private String eventLanguage;
-    private Integer participantId;
-    private String name;
-    private String email;
-    private Integer wishlistId;
-    private String participantLanguage;
-    private Integer giftToId;
-    private Integer emailId;
-
 }

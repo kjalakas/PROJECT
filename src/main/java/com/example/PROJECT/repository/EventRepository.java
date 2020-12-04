@@ -84,13 +84,33 @@ public class EventRepository {
         return jdbcTemplate.query(sql, paramMap, new ParticipantEntityRowMapper());
     }
 
-    public List<EmailData> getEmailData() {
+    public List<EmailData> getEmailData1() {
         String sql = "SELECT * FROM email\n" +
                 "    JOIN event e on email.event_id = e.event_id\n" +
                 "    JOIN participant p on email.participant_id = p.participant_id\n" +
                 "where email_sent is NULL; ";
         Map<String, Integer> paramMap = new HashMap<>();
         return jdbcTemplate.query(sql, paramMap, new EmailDataRowMapper());
+    }
+
+    public List<EmailData> getEmailData2() {
+        String sql = "SELECT * FROM email\n" +
+                "    JOIN event e on email.event_id = e.event_id\n" +
+                "    JOIN participant p on email.participant_id = p.participant_id\n" +
+                "where wishlist_sent_email is NULL; ";
+        Map<String, Integer> paramMap = new HashMap<>();
+        return jdbcTemplate.query(sql, paramMap, new EmailDataRowMapper());
+    }
+
+    public void updateWishlistEmailSent(Integer participantId,
+                                Integer eventId) {
+        String sql2 = "UPDATE participant SET wishlist_sent_email=:wishlistSentEmail " +
+                " WHERE participant_id=:participantId and event_id=:eventId";
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("participantId", participantId);
+        paramMap.put("eventId", eventId);
+        paramMap.put("wishlistSentEmail",  new Timestamp((new Date()).getTime()));
+        jdbcTemplate.update(sql2, paramMap);
     }
 
     public void updateEmailSent(Integer participantId,
@@ -104,12 +124,7 @@ public class EventRepository {
         jdbcTemplate.update(sql2, paramMap);
     }
 
-    public String getWelcomeText(String participantLanguage) {
-        String sql = "SELECT welcome_text FROM language WHERE language_description=:participantLanguage";
-        Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("participantLanguage", participantLanguage);
-        return jdbcTemplate.queryForObject(sql, paramMap, String.class);
-    }
+
 
     public String getUuid(Integer participantId,
                           Integer eventId) {
@@ -120,8 +135,65 @@ public class EventRepository {
         return jdbcTemplate.queryForObject(sql, paramMap, String.class);
     }
 
+    public String getLanguage(Integer participantId,
+                          Integer eventId) {
+        String sql = "SELECT p_language FROM participant WHERE participant_id=:participantId and event_id=:eventId";
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("participantId", participantId);
+        paramMap.put("eventId", eventId);
+        return jdbcTemplate.queryForObject(sql, paramMap, String.class);
+    }
+
+    public String getWish(Integer participantId,
+                          Integer eventId) {
+        String sql = "SELECT wishlist FROM participant WHERE participant_id=:participantId and event_id=:eventId";
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("participantId", participantId);
+        paramMap.put("eventId", eventId);
+        return jdbcTemplate.queryForObject(sql, paramMap, String.class);
+    }
+
+    public Integer wishEntered(Integer participantId,
+                          Integer eventId) {
+        String sql = "SELECT count(wishlist) FROM participant WHERE participant_id=:participantId and event_id=:eventId;";
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("participantId", participantId);
+        paramMap.put("eventId", eventId);
+        return jdbcTemplate.queryForObject(sql, paramMap, Integer.class);
+    }
+
+    public void sendWish(String uuid, String wishlist) {
+        String sql2 = "UPDATE participant SET wishlist=:wishlist " +
+                " WHERE uuid=:uuid";
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("uuid", uuid);
+        paramMap.put("wishlist", wishlist);
+        jdbcTemplate.update(sql2, paramMap);
+    }
+
+    public String getWelcomeText(String participantLanguage) {
+        String sql = "SELECT welcome_text FROM language WHERE language_description=:participantLanguage";
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("participantLanguage", participantLanguage);
+        return jdbcTemplate.queryForObject(sql, paramMap, String.class);
+    }
+
     public String getPersonalText(String participantLanguage) {
         String sql = "SELECT personal_message_text FROM language WHERE language_description=:participantLanguage";
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("participantLanguage", participantLanguage);
+        return jdbcTemplate.queryForObject(sql, paramMap, String.class);
+    }
+
+    public String getWishlistWelcomeText(String participantLanguage) {
+        String sql = "SELECT wishlist_welcome_text FROM language WHERE language_description=:participantLanguage";
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("participantLanguage", participantLanguage);
+        return jdbcTemplate.queryForObject(sql, paramMap, String.class);
+    }
+
+    public String getWishlistPersonalText(String participantLanguage) {
+        String sql = "SELECT wishlist_personal_message_text FROM language WHERE language_description=:participantLanguage";
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("participantLanguage", participantLanguage);
         return jdbcTemplate.queryForObject(sql, paramMap, String.class);
