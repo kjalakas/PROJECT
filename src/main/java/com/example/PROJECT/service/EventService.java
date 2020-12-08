@@ -26,7 +26,7 @@ public class EventService {
 
     @Transactional
     public int createEvent(EventRequest eventRequest) throws MessagingException {
-        int eventId = repository.createEvent(eventRequest.getEventDate(), eventRequest.getEventLocation(), eventRequest.getEventLanguage());
+        int eventId = repository.createEvent(eventRequest.getEventDate(), eventRequest.getEventLocation(), eventRequest.getEventLanguage(), eventRequest.getEventAmount(), eventRequest.getPersonalText());
 
         for (ParticipantRequest participant : eventRequest.getParticipants()) {
             int participantId = repository.createParticipant(participant.getName(), participant.getEmail(), participant.getParticipantLanguage(),

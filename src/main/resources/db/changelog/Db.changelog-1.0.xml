@@ -21,6 +21,12 @@
             <column name="event_language" type="text">
                 <constraints nullable="true" primaryKey="false" unique="false"/>
             </column>
+            <column name="event_amount" type="integer">
+                <constraints nullable="true" primaryKey="false" unique="false"/>
+            </column>
+            <column name="personal_text" type="text">
+                <constraints nullable="true" primaryKey="false" unique="false"/>
+            </column>
         </createTable>
         <createTable tableName="wishlist">
             <column name="wishlist_id" type="integer" autoIncrement="true">

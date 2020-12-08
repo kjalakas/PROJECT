@@ -12,6 +12,28 @@ public class EventRequest {
     // keel
     private String eventLanguage;
 
+    private Integer eventAmount;
+
+    private String personalText;
+
+    public String getPersonalText() {
+        return personalText;
+    }
+
+    public EventRequest setPersonalText(String personalText) {
+        this.personalText = personalText;
+        return this;
+    }
+
+    public Integer getEventAmount() {
+        return eventAmount;
+    }
+
+    public EventRequest setEventAmount(Integer eventAmount) {
+        this.eventAmount = eventAmount;
+        return this;
+    }
+
     private List<ParticipantRequest> participants = new ArrayList<>();
 
     public LocalDate getEventDate() {

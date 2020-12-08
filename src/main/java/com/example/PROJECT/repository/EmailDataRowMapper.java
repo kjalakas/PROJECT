@@ -15,6 +15,8 @@ public class EmailDataRowMapper implements RowMapper<EmailData> {
                 .setEventDate(resultSet.getDate("event_date"))
                 .setLocation(resultSet.getString("location"))
                 .setEventLanguage(resultSet.getString("event_language"))
+                .setEventAmount(resultSet.getInt("event_amount"))
+                .setPersonalText(resultSet.getString("personal_text"))
                 .setParticipantId(resultSet.getInt("participant_id"))
                 .setName(resultSet.getString("name"))
                 .setEmail(resultSet.getString("email"))

@@ -5,6 +5,7 @@ import com.example.PROJECT.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
@@ -25,14 +26,23 @@ public class ScheduledTasks extends EventService {
         List<EmailData> emailData2 = repository.getEmailData2();
 
         for (int i = 0; i < emailData.size(); i++) {
+            String language = "";
+            if (StringUtils.isEmpty(emailData.get(i).getParticipantLanguage())) {language = emailData.get(i).getEventLanguage();}
+            else {language = emailData.get(i).getParticipantLanguage();}
 
-            String emailSubject = repository.getWelcomeText(emailData.get(i).getParticipantLanguage());
+            String emailSubject = repository.getWelcomeText (language);
             emailSubject = emailSubject.replace("${event_date}", String.valueOf(emailData.get(i).getEventDate()));
             emailSubject = emailSubject.replace("${location}", emailData.get(i).getLocation());
-            String emailText = repository.getPersonalText(emailData.get(i).getParticipantLanguage());
+            String emailText = repository.getPersonalText(language);
             emailText = emailText.replace("${giftee}", repository.getName(emailData.get(i).getEventId(), emailData.get(i).getGiftToId()));
+            emailText = emailText.replace("${amount}", String.valueOf(repository.getAmount(emailData.get(i).getEventId())));
             emailText = emailText.replace("${participant}", repository.getName(emailData.get(i).getEventId(), emailData.get(i).getParticipantId()));
             emailText = emailText.replace("${uuid}", repository.getUuid(emailData.get(i).getParticipantId(), emailData.get(i).getEventId()));
+
+            if (StringUtils.isEmpty(repository.getPersonalMessage(emailData.get(i).getEventId())))
+            {emailText = emailText.replace("${personal}","");}
+            else { emailText = emailText.replace("${personal}", repository.getPersonalMessage(emailData.get(i).getEventId()));}
+
             sendMessage(emailData.get(i).getEmail(), emailSubject, emailText);
             repository.updateEmailSent(emailData.get(i).getParticipantId(), emailData.get(i).getEventId());
         }
@@ -41,9 +51,13 @@ public class ScheduledTasks extends EventService {
 
             if (repository.wishEntered(emailData2.get(i).getGiftToId(), emailData2.get(i).getEventId()) != 0) {
 
-                String emailSubject2 = repository.getWishlistWelcomeText(emailData2.get(i).getParticipantLanguage());
+                String language2 = "";
+                if (StringUtils.isEmpty(emailData2.get(i).getParticipantLanguage())) {language2 = emailData2.get(i).getEventLanguage();}
+                else {language2 = emailData2.get(i).getParticipantLanguage();}
+
+                String emailSubject2 = repository.getWishlistWelcomeText(language2);
                 emailSubject2 = emailSubject2.replace("${giftee}", repository.getName(emailData2.get(i).getEventId(), emailData2.get(i).getGiftToId()));
-                String emailText2 = repository.getWishlistPersonalText(emailData2.get(i).getParticipantLanguage());
+                String emailText2 = repository.getWishlistPersonalText(language2);
                 emailText2 = emailText2.replace("${giftee}", repository.getName(emailData2.get(i).getEventId(), emailData2.get(i).getGiftToId()));
                 emailText2 = emailText2.replace("${participant}", repository.getName(emailData2.get(i).getEventId(), emailData2.get(i).getParticipantId()));
                 emailText2 = emailText2.replace("${kingisoovid}", repository.getWish(emailData2.get(i).getGiftToId(), emailData2.get(i).getEventId()));

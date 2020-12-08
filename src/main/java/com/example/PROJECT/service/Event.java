@@ -7,7 +7,26 @@ public class Event {
     private LocalDate eventDate;
     private String location;
     private String eventLanguage;
+    private Integer eventAmount;
+    private String personalText;
 
+    public String getPersonalText() {
+        return personalText;
+    }
+
+    public Event setPersonalText(String personalText) {
+        this.personalText = personalText;
+        return this;
+    }
+
+    public Integer getEventAmount() {
+        return eventAmount;
+    }
+
+    public Event setEventAmount(Integer eventAmount) {
+        this.eventAmount = eventAmount;
+        return this;
+    }
 
     public Integer getEventId() {
         return eventId;

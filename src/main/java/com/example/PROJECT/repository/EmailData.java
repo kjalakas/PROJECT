@@ -7,6 +7,8 @@ public class EmailData {
     private Date eventDate;
     private String location;
     private String eventLanguage;
+    private Integer eventAmount;
+    private String personalText;
     private Integer participantId;
     private String name;
     private String email;
@@ -15,6 +17,24 @@ public class EmailData {
     private String participantLanguage;
     private Integer giftToId;
     private Integer emailId;
+
+    public String getPersonalText() {
+        return personalText;
+    }
+
+    public EmailData setPersonalText(String personalText) {
+        this.personalText = personalText;
+        return this;
+    }
+
+    public Integer getEventAmount() {
+        return eventAmount;
+    }
+
+    public EmailData setEventAmount(Integer eventAmount) {
+        this.eventAmount = eventAmount;
+        return this;
+    }
 
     public Integer getEventId() {
         return eventId;

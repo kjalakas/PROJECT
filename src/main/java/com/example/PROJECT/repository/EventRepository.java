@@ -21,13 +21,17 @@ public class EventRepository {
 
     public Integer createEvent(LocalDate eventDate,
                             String eventLocation,
-                            String eventLanguage) {
-        String sql = "INSERT INTO event (event_date, location, event_language)" +
-                "VALUES (:eventDate, :eventLocation, :eventLanguage)";
+                            String eventLanguage,
+                           Integer eventAmount,
+                               String personalText) {
+        String sql = "INSERT INTO event (event_date, location, event_language, event_amount, personal_text)" +
+                "VALUES (:eventDate, :eventLocation, :eventLanguage, :eventAmount, :personalText)";
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("eventDate", eventDate);
         paramMap.put("eventLocation", eventLocation);
         paramMap.put("eventLanguage", eventLanguage);
+        paramMap.put("eventAmount", eventAmount);
+        paramMap.put("personalText", personalText);
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(sql, new MapSqlParameterSource(paramMap), keyHolder);
         return (Integer) keyHolder.getKeys().get("event_id");
@@ -135,20 +139,25 @@ public class EventRepository {
         return jdbcTemplate.queryForObject(sql, paramMap, String.class);
     }
 
-    public String getLanguage(Integer participantId,
+    public String getWish(Integer participantId,
                           Integer eventId) {
-        String sql = "SELECT p_language FROM participant WHERE participant_id=:participantId and event_id=:eventId";
+        String sql = "SELECT wishlist FROM participant WHERE participant_id=:participantId and event_id=:eventId";
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("participantId", participantId);
         paramMap.put("eventId", eventId);
         return jdbcTemplate.queryForObject(sql, paramMap, String.class);
     }
 
-    public String getWish(Integer participantId,
-                          Integer eventId) {
-        String sql = "SELECT wishlist FROM participant WHERE participant_id=:participantId and event_id=:eventId";
+    public int getAmount(Integer eventId) {
+        String sql = "SELECT event_amount FROM event WHERE event_id=:eventId";
         Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("participantId", participantId);
+        paramMap.put("eventId", eventId);
+        return jdbcTemplate.queryForObject(sql, paramMap, Integer.class);
+    }
+
+    public String getPersonalMessage(Integer eventId) {
+        String sql = "SELECT personal_text FROM event WHERE event_id=:eventId";
+        Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("eventId", eventId);
         return jdbcTemplate.queryForObject(sql, paramMap, String.class);
     }
