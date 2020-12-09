@@ -40,7 +40,7 @@ public class ScheduledTasks extends EventService {
             emailText = emailText.replace("${uuid}", repository.getUuid(emailData.get(i).getParticipantId(), emailData.get(i).getEventId()));
 
             if (StringUtils.isEmpty(repository.getPersonalMessage(emailData.get(i).getEventId())))
-            {emailText = emailText.replace("${personal}","");}
+            {emailText = emailText.replace("<p>${personal}</p>","");}
             else { emailText = emailText.replace("${personal}", repository.getPersonalMessage(emailData.get(i).getEventId()));}
 
             sendMessage(emailData.get(i).getEmail(), emailSubject, emailText);
